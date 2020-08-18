@@ -2,18 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="3058865d-4e4e-4021-8c67-dbe6f53210d6" name="Default Changelist" comment="&quot;version 18-08&quot;">
-      <change afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/control_file_ps.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/control_stegano_exif.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/control_text_file_regex.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/cnam_image_ocr_1.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/cnam_image_ocr_1.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/detection_text_image.py" beforeDir="false" afterPath="$PROJECT_DIR$/detection_text_image.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/size_object.py" beforeDir="false" afterPath="$PROJECT_DIR$/size_object.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/text_recognition_image.py" beforeDir="false" afterPath="$PROJECT_DIR$/text_recognition_image.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/text_sample_recognition.py" beforeDir="false" afterPath="$PROJECT_DIR$/text_sample_recognition.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -179,6 +168,14 @@
       <option name="presentableId" value="Default" />
       <updated>1593421389035</updated>
     </task>
+    <task id="LOCAL-00001" summary="&quot;version 18-08&quot;">
+      <created>1597745654557</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1597745654557</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
