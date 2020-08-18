@@ -1,20 +1,20 @@
 # import the libraries
-from PIL import Image
+
 import pytesseract
 import cv2
-import codecs
 import re
 
+"""
+Ce module extracte tout le texte structuré présent sur une image
+En entrée il prend une image et en sortie le texte extracté
+"""
 
-def text_sample_recognition(image_name):
-
-
-    path = "images/" + image_name
-    # declaring the exe path for tesseract
-    pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
+def text_sample_recognition(image,pytesseractexe):
+    #The path of tesseract exe
+    pytesseract.pytesseract.tesseract_cmd = pytesseractexe
 
     # loading the image from the disk
-    image_to_ocr = cv2.imread(path)
+    image_to_ocr = image
 
     # preprocessing the image
     # step 1 : covert to grey scale
@@ -25,46 +25,14 @@ def text_sample_recognition(image_name):
     # step 3 : Smooth the image using median blur
     #preprocessed_img = cv2.medianBlur(preprocessed_img, 3)
 
-    # etape pour vérifier la qualité de l'image traitée
-    cv2.imwrite('temp_img.jpg', preprocessed_img)
-
-    preprocessed_pil_img = Image.open('temp_img.jpg')
-
     # le choix des paramètres d'entrées de pytesseact, par défault eng et 7 pour structuré
-    # config = ("-l eng --oem 3 --psm 7")
+    config = ("-l eng --oem 3 --psm 7")
 
-    # pass the pil image to tesseract to do OCR
-    text_extracted = pytesseract.image_to_string(preprocessed_img)
+    # pass the  image to tesseract to do OCR
+    text_extracted = pytesseract.image_to_string(preprocessed_img,config=config)
+    text_extracted=re.sub('[^a-zA-Z0-9 \n\.]', '', text_extracted)
+    return text_extracted
 
-    # print the text
-#    print(text_extracted)
-    # Bricolage ....... A enlever
-    regexp = r'(?=([\d]{15}))'
-    regexp2 = r'(?=([A-Z0-9]{9}))'
-
-    text = re.findall(regexp, text_extracted, re.DOTALL)
-
-
-
-    text.append(re.findall(regexp2, text_extracted, re.DOTALL))
-    print(text)
-    print(len(text))
-    print(text[0])
-    if text[0] != [] :
-    #print('il y a un num de sécurité!:', text)
-        return {"text": text_extracted, "num": text, "controle": "ko"}
-
-    else:
-        return {"text" : text_extracted, "num": "noNum", "controle" : "ok"}
-
-    #Fichier de sortie :
-    file = codecs.open("result.txt", "w", "utf-8")
-    file.write(text)
-
-    # display the original image
-    cv2.imshow("Actual Image", image_to_ocr)
-
-    #Retour d'un dictionnaire {text , num, controle}
-
-
-
+#To test this module
+#image= cv2.imread("images/test_ocr_1.jpg")
+#print(text_sample_recognition(image))

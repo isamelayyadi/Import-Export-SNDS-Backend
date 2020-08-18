@@ -1,7 +1,4 @@
-# python text_recognition.py --east frozen_east_text_detection.pb --image images/example_01.jpg
-# python text_recognition.py --east frozen_east_text_detection.pb --image images/CarteVitale2.png  --padding 0.05
 
-# import the necessary packages
 from imutils.object_detection import non_max_suppression
 import numpy as np
 import pytesseract
@@ -9,7 +6,6 @@ import cv2
 import re
 
 
-pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
 def decode_predictions(scores, geometry,min_confidence):
 	# grab the number of rows and columns from the scores volume, then
 	# initialize our set of bounding box rectangles and corresponding
@@ -67,11 +63,12 @@ def decode_predictions(scores, geometry,min_confidence):
 	# return a tuple of the bounding boxes and associated confidences
 	return (rects, confidences)
 
-def text_recognition_image(image_name,east,padding,min_confidence,width, height):
-	path = "images/" + image_name
-	for i in range(1,7) :
+def text_recognition_image(image_name,east,padding,min_confidence,width, height,pytesseractexe):
+	pytesseract.pytesseract.tesseract_cmd =pytesseractexe
+	all_text = []
+	for i in range(1,3) :
 		paddingi= i*padding
-		image1 = cv2.imread(path)
+		image1 = image_name
 		image = cv2.resize(image1, (800, 505))
 		orig = image.copy()
 		(origH, origW) = image.shape[:2]
@@ -151,30 +148,36 @@ def text_recognition_image(image_name,east,padding,min_confidence,width, height)
 		# sort the results bounding box coordinates from top to bottom
 		results = sorted(results, key=lambda r: r[0][1])
 		# loop over the results
+
+		print("pading",i)
+
 		for ((startX, startY, endX, endY), text) in results:
-			# display the text OCR'd by Tesseract
-			# Bricolage ....... A enlever
-			regexp = r'(?=([\d]{15}))'
-			regexp2 = r'(?=([A-Z0-9]{11}))'
+			#print(re.sub('[^a-zA-Z0-9 \n\.]', '', text))
+			all_text.append(re.sub('[^a-zA-Z0-9 \n\.]', '', text))
 
-			num = re.findall(regexp, text.replace(" ", "").replace(".", ""), re.DOTALL)
-			num.append(re.findall(regexp2, text, re.DOTALL))
-			if num[0] != []:
+	lines = (line.strip() for line in " ".join(all_text).splitlines())
+	# break multi-headlines into a line each
+	chunks = (phrase.strip() for line in lines for phrase in line.split("  "))
+	# drop blank lines
+	all_text = '\n'.join(chunk for chunk in chunks if chunk)
 
-				text = "".join([c if ord(c) < 128 else "" for c in text]).strip()
-				output = orig.copy()
-				cv2.rectangle(output, (startX, startY), (endX, endY),
-						  (0, 0, 255), 2)
-				cv2.putText(output, text, (startX, startY - 20),
-						cv2.FONT_HERSHEY_SIMPLEX, 1.2, (0, 0, 255), 3)
+	all_text = all_text.split('\n')
+	return " ".join(all_text)
 
-			# show the output image
-				#cv2.imshow("Text Detection", output)
-				cv2.imwrite("result_num_find_"+image_name, output)
-				return {"text": "text","num": num, "controle": "ko"}
+""""
+#To test this module
+pytesseractexe = 
+east = "east_text_detection.pb"
+# padding initial
 
-	return {"num": "noNnum", "controle": "ok"}
+# A ne pas changer ces parametres :
+# min_confidence , par defaul : 0,5
+padding = 0.1
+min_confidence = 0.5
+# resize, par default
+(height, width) = (320, 320)
 
+image_name= cv2.imread("images/test_ocr_6.jpg")
+print(text_recognition_image(image_name, east, padding, min_confidence, width, height,pytesseractexe))
 
-
-
+"""

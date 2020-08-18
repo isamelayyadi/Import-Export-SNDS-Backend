@@ -4,15 +4,18 @@ from imutils import contours
 import numpy as np
 import imutils
 import cv2
+'''
+Ce module controle la taille des objets dans une image, il prend en entrée une image et la taille (withO) du premier objet detecté.
+Il detecte la taille de tout les objets sur les images relativement à withO.
+Il compare la taille du plus grand et du plus petit, en sortie il retourne un dictionnaire (Objet ou noObjet)
 
+'''
 
-def midpoint(ptA,ptB):
+def midpoint(ptA, ptB):
     return (ptA[0] + ptB[0]) * 0.5, (ptA[1] + ptB[1]) * 0.5
 
-def size_object(image_name, widthO) :
-    path = "images/" + image_name
-    # load the image, convert it to grayscale, and blur it slightly
-    image = cv2.imread(path)
+
+def size_object(image, widthO):
     gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
     gray = cv2.GaussianBlur(gray, (7, 7), 0)
 
@@ -21,7 +24,7 @@ def size_object(image_name, widthO) :
     edged = cv2.Canny(gray, 50, 100)
     edged = cv2.dilate(edged, None, iterations=1)
     edged = cv2.erode(edged, None, iterations=1)
-    #cv2.imshow("edged", edged)
+    # cv2.imshow("edged", edged)
     # find contours in the edge map
     cnts = cv2.findContours(edged.copy(), cv2.RETR_EXTERNAL,
                             cv2.CHAIN_APPROX_SIMPLE)
@@ -70,8 +73,6 @@ def size_object(image_name, widthO) :
         (tlblX, tlblY) = midpoint(tl, bl)
         (trbrX, trbrY) = midpoint(tr, br)
 
-
-
         # compute the Euclidean distance between the midpoints
         dA = dist.euclidean((tltrX, tltrY), (blbrX, blbrY))
         dB = dist.euclidean((tlblX, tlblY), (trbrX, trbrY))
@@ -81,7 +82,6 @@ def size_object(image_name, widthO) :
         # (in this case, inches)
         if pixelsPerMetric is None:
             pixelsPerMetric = dB / widthO
-
 
         # compute the size of the object
         dimA = dA / pixelsPerMetric
@@ -99,12 +99,8 @@ def size_object(image_name, widthO) :
         # cv2.imshow("Image", orig)
         dimt.append(dimA)
     #    cv2.waitKey(0)
-    print(max(dimt), min(dimt))
-    if  max(dimt) / (min(dimt)+0.01) > 8 and min(dimt)>0.007:
-        print(max(dimt) / (min(dimt)+0.01))
-        return {"test_objet":"Object"}
-    else:
-        print("petit")
-        return {"test_objet":"noObject"}
-
-
+    test_objet=""
+    if max(dimt) / (min(dimt) + 0.01) > 8 and min(dimt) > 0.007:
+        test_objet = "Object"
+    else: test_objet = "noObject"
+    return test_objet

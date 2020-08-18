@@ -1,17 +1,18 @@
 
-# import the necessary packages
+# import the libraries
 from imutils.object_detection import non_max_suppression
 import numpy as np
 import time
 import cv2
 
+"""
+Ce module determine si une image avec des objets contient ou pas du texte
+
+"""
+
+def detection_text_image(image, east, min_confidence,width, height) :
 
 
-def detection_text_image(image_name, east, min_confidence,width, height) :
-    path = "images/" + image_name
-
-    image = cv2.imread(path)
-    orig = image.copy()
     (H, W) = image.shape[:2]
 
     # set the new width and height and then determine the ratio in change
@@ -104,28 +105,11 @@ def detection_text_image(image_name, east, min_confidence,width, height) :
     boxes = non_max_suppression(np.array(rects), probs=confidences)
 
 
-    # print test image without text
 
-
-    # loop over the bounding boxes
-    for (startX, startY, endX, endY) in boxes:
-        # scale the bounding box coordinates based on the respective
-        # ratios
-        startX = int(startX * rW)
-        startY = int(startY * rH)
-        endX = int(endX * rW)
-        endY = int(endY * rH)
-
-        # draw the bounding box on the image
-        cv2.rectangle(orig, (startX, startY), (endX, endY), (0, 255, 0), 2)
-
-    # show the output image
-    cv2.imwrite("result_text_find_"+image_name, orig)
-#    cv2.waitKey(0)
     if len(boxes) <=2:
-        #print("No text in this image")
-        return{"text": "notext","num": "nonum", "controle": "ok"}
-    else: return {"text": "text"}
+        text_in_image = "notext"
+    else: text_in_image = "text"
+    return text_in_image
 
 
 
